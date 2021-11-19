@@ -5,3 +5,11 @@
 .uk-flex-justify-content-space-between {
   justify-content: space-between;
 }
+
+.white-text {
+  color: white !important;
+}
+
+.clickable {
+  cursor: pointer;
+}
