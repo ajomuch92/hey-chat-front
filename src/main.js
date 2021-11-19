@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
-import PrimeVue from 'primevue/config';
 import router from './routes';
+import Vuikit from 'vuikit';
+import VuikitIcons from '@vuikit/icons';
+import './styles/style.css'
+
+import '@vuikit/theme'
 
 Vue.config.productionTip = false
 
-Vue.use(PrimeVue);
+Vue.use(Vuikit)
+Vue.use(VuikitIcons)
 
 new Vue({
   router,
