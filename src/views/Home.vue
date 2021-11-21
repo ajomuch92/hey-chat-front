@@ -9,7 +9,7 @@
       </vk-navbar-nav>
     </vk-navbar>
     <div class="sidebar uk-padding" :class="{'sidebar-visible': drawer}">
-      <p v-for="(page, key) in pages" :key="key" class="uk-flex uk-flex-middle clickable">
+      <p v-for="(page, key) in pages" :key="key" class="uk-flex uk-flex-middle clickable" @click="handleClick(page.name)">
         <vk-icon class="uk-margin-right" :icon="page.icon" />
         <span class="uk-text-lead">{{ page.name }}</span>
       </p>
@@ -47,7 +47,24 @@ export default {
     ],
     drawer: true
   }),
-  mounted() {
+  methods: {
+    handleClick(name) {
+      switch (name) {
+        case 'Dashboard':
+          this.$router.push({ path: '/home' })
+          break;
+        case 'Organizaciones':
+          this.$router.push({ path: '/organizations' })
+          break;
+        case 'Configuración':
+          this.$router.push({ path: '/settings' })
+          break;
+        case 'Salir':
+          break;
+        default:
+          break;
+      }
+    }
   }
 }
 </script>
