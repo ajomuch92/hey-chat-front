@@ -10,8 +10,10 @@
   "dependencies": {
     "@vuikit/icons": "^0.8.1",
     "@vuikit/theme": "^0.8.1",
+    "a-flexbox": "^1.0.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vue-breakpoint-mixin": "^1.2.0",
     "vue-router": "^3.5.3",
     "vuikit": "^0.8.10"
   },

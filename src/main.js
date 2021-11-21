@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './routes';
 import Vuikit from 'vuikit';
 import VuikitIcons from '@vuikit/icons';
+import 'a-flexbox/a-flexbox.css';
 import './styles/style.css'
 
 import '@vuikit/theme'
