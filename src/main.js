@@ -16,6 +16,7 @@ Vue.use(Vuikit)
 Vue.use(VuikitIcons)
 
 Vue.prototype._ = _;
+Vue.prototype.$bus = new Vue();
 
 new Vue({
   router,
