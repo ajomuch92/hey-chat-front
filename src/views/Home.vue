@@ -51,15 +51,17 @@ export default {
     handleClick(name) {
       switch (name) {
         case 'Dashboard':
-          this.$router.push({ path: '/home' })
+          this.$router.push({ path: '/home' });
           break;
         case 'Organizaciones':
-          this.$router.push({ path: '/organizations' })
+          this.$router.push({ path: '/organizations' });
           break;
         case 'Configuración':
-          this.$router.push({ path: '/settings' })
+          this.$router.push({ path: '/settings' });
           break;
         case 'Salir':
+          this.$store.commit('setAccessToken', '');
+          this.$router.push({ path: '/' });
           break;
         default:
           break;

@@ -21,19 +21,19 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="email-text">Correo</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="email-text" type="email" placeholder="name@email.com">
+            <input v-model="loginData.email" class="uk-input" id="email-text" type="email" placeholder="name@email.com">
           </div>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="password-text">Contraseña</label>
           <div class="uk-form-controls">
-              <input class="uk-input" id="password-text" type="password" placeholder="*****">
+              <input v-model="loginData.password" class="uk-input" id="password-text" type="password" placeholder="•••••••">
           </div>
         </div>
       </div>
       <div slot="footer" class="uk-text-right">
-        <vk-button class="uk-margin-small-right" @click="showLoginModal = false">Cancelar</vk-button>
-        <vk-button type="primary">Entrar</vk-button>
+        <vk-button class="uk-margin-small-right" @click="cancelLogin">Cancelar</vk-button>
+        <vk-button type="primary" @click="login">Entrar</vk-button>
       </div>
     </vk-modal>
     <vk-modal center :show.sync="showCreateAccountModal">
@@ -47,15 +47,15 @@
           </div>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" for="email-text">Correo</label>
+          <label class="uk-form-label" for="email-text-2">Correo</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="email-text" type="email" placeholder="name@email.com">
+            <input class="uk-input" id="email-text-2" type="email" placeholder="name@email.com">
           </div>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" for="password-text">Contraseña</label>
+          <label class="uk-form-label" for="password-text-2">Contraseña</label>
           <div class="uk-form-controls">
-              <input class="uk-input" id="password-text" type="password" placeholder="*****">
+              <input class="uk-input" id="password-text-2" type="password" placeholder="*****">
           </div>
         </div>
       </div>
@@ -68,12 +68,41 @@
 </template>
 
 <script>
+import axios from '../utils/axios'
+
 export default {
   name: 'Index',
   data: () => ({
     showLoginModal: false,
     showCreateAccountModal: false,
-  })
+    loginData: {
+      email: '',
+      password: '',
+      strategy: 'local'
+    }
+  }),
+  methods: {
+    login() {
+      this.$bus.$emit('loading', true);
+      axios.post('authentication', this.loginData).then(response => {
+        this.$bus.$emit('loading', false);
+        const { data } = response;
+        this.$store.commit('setAccessToken', data.accessToken);
+        this.$router.push({ path: '/home' });
+      }).catch(() => {
+        this.$bus.$emit('loading', false);
+        this.$bus.$emit('notification', {message: 'Hubo un error al iniciar sesión', status: 'danger'})
+      })
+    },
+    cancelLogin() {
+      this.showLoginModal = false;
+      this.loginData = {
+        email: '',
+        password: '',
+        strategy: 'local'
+      };
+    }
+  }
 }
 </script>
 
