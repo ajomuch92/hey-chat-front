@@ -7,13 +7,15 @@ import store from './store';
 import 'a-flexbox/a-flexbox.css';
 import './styles/style.css';
 import _ from 'lodash';
+import VueGoogleCharts from 'vue-google-charts';
 
 import '@vuikit/theme'
 
 Vue.config.productionTip = false
 
-Vue.use(Vuikit)
-Vue.use(VuikitIcons)
+Vue.use(Vuikit);
+Vue.use(VuikitIcons);
+Vue.use(VueGoogleCharts);
 
 Vue.prototype._ = _;
 Vue.prototype.$bus = new Vue();
