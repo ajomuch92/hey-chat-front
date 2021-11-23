@@ -61,6 +61,7 @@ export default {
           break;
         case 'Salir':
           this.$store.commit('setAccessToken', '');
+          this.$store.commit('setCurrentUser', {});
           this.$router.push({ path: '/' });
           break;
         default:

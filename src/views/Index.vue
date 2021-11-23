@@ -43,25 +43,25 @@
         <div class="uk-margin">
           <label class="uk-form-label" for="name-text">Nombre</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="name-text" type="text" placeholder="Jane Doe">
+            <input v-model="newAccountData.username" class="uk-input" id="name-text" type="text" placeholder="Jane Doe">
           </div>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="email-text-2">Correo</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="email-text-2" type="email" placeholder="name@email.com">
+            <input v-model="newAccountData.email" class="uk-input" id="email-text-2" type="email" placeholder="name@email.com">
           </div>
         </div>
         <div class="uk-margin">
           <label class="uk-form-label" for="password-text-2">Contraseña</label>
           <div class="uk-form-controls">
-              <input class="uk-input" id="password-text-2" type="password" placeholder="*****">
+              <input v-model="newAccountData.password" class="uk-input" id="password-text-2" type="password" placeholder="•••••••">
           </div>
         </div>
       </div>
       <div slot="footer" class="uk-text-right">
-        <vk-button class="uk-margin-small-right" @click="showCreateAccountModal = false">Cancelar</vk-button>
-        <vk-button type="primary">Entrar</vk-button>
+        <vk-button class="uk-margin-small-right" @click="cancelCreateUser">Cancelar</vk-button>
+        <vk-button type="primary" @click="createUser">Entrar</vk-button>
       </div>
     </vk-modal>
   </div>
@@ -79,6 +79,11 @@ export default {
       email: '',
       password: '',
       strategy: 'local'
+    },
+    newAccountData: {
+      email: '',
+      password: '',
+      username: ''
     }
   }),
   methods: {
@@ -88,11 +93,12 @@ export default {
         this.$bus.$emit('loading', false);
         const { data } = response;
         this.$store.commit('setAccessToken', data.accessToken);
+        this.$store.commit('setCurrentUser', data.user);
         this.$router.push({ path: '/home' });
       }).catch(() => {
         this.$bus.$emit('loading', false);
         this.$bus.$emit('notification', {message: 'Hubo un error al iniciar sesión', status: 'danger'})
-      })
+      });
     },
     cancelLogin() {
       this.showLoginModal = false;
@@ -100,6 +106,25 @@ export default {
         email: '',
         password: '',
         strategy: 'local'
+      };
+    },
+    createUser() {
+      this.$bus.$emit('loading', true);
+      axios.post('users', this.newAccountData).then(() => {
+        this.$bus.$emit('loading', false);
+        this.$bus.$emit('notification', {message: 'Usuario creado', status: 'success'});
+        this.cancelCreateUser();
+      }).catch(() => {
+        this.$bus.$emit('loading', false);
+        this.$bus.$emit('notification', {message: 'Hubo un error al crear el usuario', status: 'danger'});
+      });
+    },
+    cancelCreateUser() {
+      this.showCreateAccountModal = false;
+      this.newAccountData = {
+        email: '',
+        password: '',
+        username: ''
       };
     }
   }

@@ -8,15 +8,26 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    accessToken: ''
+    accessToken: '',
+    currentUser: {},
   },
   mutations: {
+    initialiseStore() {
+      const store = ls.get('hey-chat');
+			if(store) {
+        this.replaceState(store);
+			}
+    },
     setAccessToken(state, token) {
       state.accessToken = token;
+    },
+    setCurrentUser(state, user) {
+      state.currentUser = user;
     }
   },
   getters: {
-    accessToken: (state) => state.accessToken
+    accessToken: state => state.accessToken,
+    currentUser: state => state.currentUser,
   }
 })
 
