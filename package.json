@@ -19,6 +19,7 @@
     "vue-breakpoint-mixin": "^1.2.0",
     "vue-google-charts": "^0.3.3",
     "vue-router": "^3.5.3",
+    "vue-sweetalert2": "^5.0.2",
     "vuex": "^3.6.2",
     "vuikit": "^0.8.10"
   },
