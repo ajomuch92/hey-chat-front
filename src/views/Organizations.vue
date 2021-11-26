@@ -8,9 +8,13 @@
       <vk-table-column v-for="(column, key) in columns" :key="key" :title="column.title" :cell="column.cell">
         <template v-slot:default="{row}" v-if="column.cell=='actions'">
           <div>
-            <vk-icon-button class="uk-margin-small-right" icon="pencil"/>
+            <vk-icon-button class="uk-margin-small-right" icon="users"/>
+            <vk-icon-button class="uk-margin-small-right" icon="pencil" @click="showEditDialog(row)"/>
             <vk-icon-button icon="trash" @click="showAlertDelete(row.id)"/>
           </div>
+        </template>
+        <template v-else-if="column.cell=='createdAt'" v-slot:default="{cell}">
+          <span>{{ cell | localDate}}</span>
         </template>
       </vk-table-column>
     </vk-table>
@@ -26,7 +30,8 @@
       </div>
       <div slot="footer" class="uk-text-right">
         <vk-button class="uk-margin-small-right" @click="cancelCreateOrganization">Cancelar</vk-button>
-        <vk-button type="primary" @click="createOrganization">Crear</vk-button>
+        <vk-button v-if="currentOrganization.id" type="primary" @click="saveChanges">Guardar</vk-button>
+        <vk-button v-else type="primary" @click="createOrganization">Crear</vk-button>
       </div>
     </vk-modal>
   </div>
@@ -39,6 +44,11 @@ import TokenMixin from '../mixins/TokenMixin'
 export default {
   name: 'Organizations',
   mixins: [TokenMixin],
+  filters: {
+    localDate(date) {
+      return new Date(date).toLocaleDateString()
+    }
+  },
   data: () => ({
     columns: [
       {
@@ -64,7 +74,8 @@ export default {
     ],
     items: [],
     showDialog: false,
-    newOrganizationName: ''
+    newOrganizationName: '',
+    currentOrganization: {},
   }),
   created() {
     this.getData();
@@ -110,6 +121,7 @@ export default {
     cancelCreateOrganization() {
       this.showDialog = false;
       this.newOrganizationName = '';
+      this.currentOrganization = {};
     },
     showAlertDelete(id) {
       this.$swal({
@@ -137,6 +149,28 @@ export default {
         this.$bus.$emit('notification', {message: 'Organización eliminada', status: 'success'});
       }).catch(() => {
         this.$bus.$emit('notification', {message: 'Hubo un error al eliminar la organización', status: 'danger'});
+      })
+    },
+    showEditDialog(organization) {
+      this.currentOrganization = organization;
+      this.newOrganizationName = this.currentOrganization.name;
+      this.showDialog = true;
+    },
+    saveChanges() {
+      this.currentOrganization.name = this.newOrganizationName;
+      this.$bus.$emit('loading', true);
+      axios.put(`/organizations/${this.currentOrganization.id}`, this.currentOrganization, {
+        headers: {
+          Authorization: this.accessToken
+        }
+      }).then(() => {
+        this.$bus.$emit('loading', false);
+        this.$bus.$emit('notification', {message: 'Cambios guardados', status: 'success'});
+        this.cancelCreateOrganization();
+        this.getData();
+      }).catch(() => {
+        this.$bus.$emit('loading', false);
+        this.$bus.$emit('notification', {message: 'Hubo un error al actualizar la organización', status: 'danger'});
       })
     }
   }
